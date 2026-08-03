@@ -1,0 +1,2 @@
+machines,sensor_readings,process_runs,window_start,window_end,total_failures,total_errors,maintenance_events,reactive_maintenance_pct,fleet_mtbf_hours,fleet_mtbf_days,avg_est_uptime_pct,est_downtime_hours,avg_health_score,critical_machines,elevated_risk_machines,avg_voltage,avg_rotation_rpm,avg_pressure,avg_vibration,avg_process_temp_c,process_failure_rate_pct
+100,876100,10000,2015-01-01,2016-01-01,761,3919,3286,22.61,1151.2,48.0,99.07,8130,90.0,8,8,170.78,446.61,100.86,40.39,36.86,3.39

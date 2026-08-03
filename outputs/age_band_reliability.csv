@@ -1,0 +1,4 @@
+age_band,machines,failures,avg_failures_per_machine,avg_mtbf_days,avg_vibration
+Mid-life (8-15y),34,247,7.26,65.1,40.37
+New (<8y),31,182,5.87,74.4,40.28
+Old (15y+),35,332,9.49,42.0,40.49

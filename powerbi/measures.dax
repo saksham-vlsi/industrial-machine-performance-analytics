@@ -1,0 +1,162 @@
+// ============================================================================
+//  INDUSTRIAL MACHINE PERFORMANCE ANALYTICS  --  DAX MEASURE LIBRARY
+// ----------------------------------------------------------------------------
+//  Paste into a table named  _Measures.
+//  Tables: MachineDaily (fact_machine_daily.csv, 36,600 rows)
+//          MachineHealth (machine_health_score.csv, 100 rows)
+//          FaultDist (fault_distribution.csv)  Precursor (precursor_signature.csv)
+//          RootCause (root_cause_by_component.csv)  Alerts (alert_and_maintenance_schedule.csv)
+//          ProcessRCA (process_root_cause.csv)  DimDate
+//
+//  Naming: measures prefixed "Est " depend on the documented MTTR assumption.
+//  Everything else is measured.
+// ============================================================================
+
+
+// ------------------------------------------------------------------ 1. FLEET
+Machines = DISTINCTCOUNT ( MachineDaily[machine_id] )
+
+Sensor Readings = SUM ( MachineDaily[readings] )
+
+Operating Hours = [Sensor Readings]          // hourly sampling: 1 reading = 1 hour
+
+Total Failures = SUM ( MachineDaily[failure_count] )
+
+Total Errors = SUM ( MachineDaily[error_count] )
+
+Maintenance Events = SUM ( MachineDaily[maint_count] )
+
+Unplanned Maintenance = SUM ( MachineDaily[unplanned_maint_count] )
+
+
+// ------------------------------------------------------------ 2. RELIABILITY
+// MTBF is measured: operating hours divided by failures.
+MTBF Hours = DIVIDE ( [Operating Hours], [Total Failures] )
+
+MTBF Days = DIVIDE ( [MTBF Hours], 24 )
+
+Failures per Machine = DIVIDE ( [Total Failures], [Machines] )
+
+Failures per Year = DIVIDE ( [Total Failures] * 8760, [Operating Hours] )
+
+Errors per Failure = DIVIDE ( [Total Errors], [Total Failures] )
+
+// The headline maintenance-programme KPI. Falling = the programme is working.
+Reactive Maintenance % = DIVIDE ( [Unplanned Maintenance], [Maintenance Events] ) * 100
+
+Planned Maintenance % = 100 - [Reactive Maintenance %]
+
+// "Est " prefix = depends on the documented MTTR assumption (4h unplanned, 2h planned).
+Est Downtime Hours = [Total Failures] * 4 + ( [Maintenance Events] - [Unplanned Maintenance] ) * 2
+
+Est Uptime % = ( 1 - DIVIDE ( [Est Downtime Hours], [Operating Hours] ) ) * 100
+
+
+// -------------------------------------------------------------- 3. PARAMETERS
+Avg Voltage   = AVERAGE ( MachineDaily[avg_voltage] )
+Avg Rotation  = AVERAGE ( MachineDaily[avg_rotation] )
+Avg Pressure  = AVERAGE ( MachineDaily[avg_pressure] )
+Avg Vibration = AVERAGE ( MachineDaily[avg_vibration] )
+
+Peak Vibration = MAX ( MachineDaily[max_vibration] )
+
+// A rising standard deviation often precedes a rising mean -- instability is
+// the earlier signal, so it gets its own measure.
+Vibration Instability = AVERAGE ( MachineDaily[sd_vibration] )
+
+// Each machine against its OWN mean, not a fleet constant.
+Vibration vs Own Baseline % =
+VAR OwnBaseline =
+    CALCULATE ( AVERAGE ( MachineDaily[avg_vibration] ), ALLEXCEPT ( MachineDaily, MachineDaily[machine_id] ) )
+RETURN DIVIDE ( [Avg Vibration] - OwnBaseline, OwnBaseline ) * 100
+
+
+// ------------------------------------------------------------------ 4. HEALTH
+Avg Health Score = AVERAGE ( MachineHealth[health_score] )
+
+Critical Machines = CALCULATE ( COUNTROWS ( MachineHealth ), MachineHealth[health_band] = "D - Critical" )
+
+Elevated Risk Machines = CALCULATE ( COUNTROWS ( MachineHealth ), MachineHealth[health_band] = "C - Elevated risk" )
+
+Healthy Machines = CALCULATE ( COUNTROWS ( MachineHealth ), MachineHealth[health_band] = "A - Healthy" )
+
+Machines Needing Action = [Critical Machines] + [Elevated Risk Machines]
+
+Worst Machine =
+CALCULATE (
+    SELECTEDVALUE ( MachineHealth[machine_id] ),
+    TOPN ( 1, ALL ( MachineHealth ), MachineHealth[health_score], ASC )
+)
+
+
+// -------------------------------------------------------------- 5. ROOT CAUSE
+// The diagnostic answer: which parameter identifies the selected fault.
+Dominant Parameter = SELECTEDVALUE ( RootCause[dominant_parameter] )
+
+Max Deviation % =
+MAXX (
+    RootCause,
+    MAX (
+        ABS ( RootCause[voltage_dev_pct] ),
+        MAX ( ABS ( RootCause[rotation_dev_pct] ),
+        MAX ( ABS ( RootCause[pressure_dev_pct] ), ABS ( RootCause[vibration_dev_pct] ) ) )
+    )
+)
+
+Top 3 Fault Share % =
+VAR Top3 = TOPN ( 3, ALL ( FaultDist ), FaultDist[failures], DESC )
+RETURN DIVIDE ( SUMX ( Top3, FaultDist[failures] ), SUMX ( ALL ( FaultDist ), FaultDist[failures] ) ) * 100
+
+// Threshold breach rate at T-24h vs baseline: the detectability multiplier.
+Threshold Breach Lift =
+VAR Base = CALCULATE ( MAX ( Precursor[readings] ), Precursor[failure_window] = "Baseline" )
+VAR T24  = CALCULATE ( MAX ( Precursor[readings] ), Precursor[failure_window] = "T-24h" )
+RETURN DIVIDE ( T24, Base )
+
+
+// ------------------------------------------------------------------ 6. ALERTS
+Active Alerts =
+CALCULATE (
+    COUNTROWS ( Alerts ),
+    FILTER ( Alerts, Alerts[vibration_alert] = 1 || Alerts[pressure_alert] = 1 || Alerts[voltage_alert] = 1 )
+)
+
+P1 Machines = CALCULATE ( COUNTROWS ( Alerts ), Alerts[maintenance_priority] = "P1 - Schedule within 7 days" )
+
+Avg Service Interval Days = AVERAGE ( Alerts[recommended_service_interval_days] )
+
+
+// ------------------------------------------------------- 7. TIME INTELLIGENCE
+Failures PM = CALCULATE ( [Total Failures], DATEADD ( DimDate[Date], -1, MONTH ) )
+
+Failures MoM % = DIVIDE ( [Total Failures] - [Failures PM], [Failures PM] ) * 100
+
+MTBF 3M Avg =
+AVERAGEX ( DATESINPERIOD ( DimDate[Date], MAX ( DimDate[Date] ), -3, MONTH ), [MTBF Hours] )
+
+Vibration Rolling 30D =
+CALCULATE ( [Avg Vibration], DATESINPERIOD ( DimDate[Date], MAX ( DimDate[Date] ), -30, DAY ) )
+
+
+// ------------------------------------------------- 8. CONDITIONAL FORMATTING
+Health Colour =
+SWITCH (
+    TRUE (),
+    [Avg Health Score] >= 90, "#0ca30c",
+    [Avg Health Score] >= 75, "#fab219",
+    [Avg Health Score] >= 60, "#ec835a",
+    "#d03b3b"
+)
+
+Reactive Status =
+SWITCH (
+    TRUE (),
+    [Reactive Maintenance %] <= 15, "▲ Best practice",
+    [Reactive Maintenance %] <= 25, "■ Acceptable",
+    "▼ Too reactive"
+)
+
+Report Header =
+"MTBF " & FORMAT ( [MTBF Days], "0.0" ) & "d  |  reactive "
+    & FORMAT ( [Reactive Maintenance %], "0.0" ) & "%  |  "
+    & FORMAT ( [Machines Needing Action], "0" ) & " machines need attention"

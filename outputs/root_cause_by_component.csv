@@ -1,0 +1,5 @@
+component,readings,avg_voltage,voltage_dev_pct,voltage_z,avg_rotation,rotation_dev_pct,rotation_z,avg_pressure,pressure_dev_pct,pressure_z,avg_vibration,vibration_dev_pct,vibration_z,dominant_parameter,recommended_action
+comp2,6016,171.28,0.42,0.05,369.07,-17.58,-1.52,101.16,0.48,0.04,40.27,-0.04,-0.0,Rotation,Replace component 2; inspect pressure line and bearing seating
+comp4,4466,170.92,0.21,0.02,441.28,-1.45,-0.13,101.2,0.53,0.05,50.39,25.07,1.92,Vibration,"Replace component 4; inspect mounting, balance and vibration damping"
+comp1,4276,190.9,11.92,1.32,446.35,-0.32,-0.03,100.66,-0.01,-0.0,40.24,-0.11,-0.01,Voltage,Replace component 1; check voltage regulation and supply stability
+comp3,3144,171.49,0.54,0.06,444.0,-0.84,-0.07,125.37,24.53,2.28,40.13,-0.38,-0.03,Pressure,Replace component 3; check drive coupling and rotational load

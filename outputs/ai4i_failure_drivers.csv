@@ -1,0 +1,7 @@
+failure_mode,runs,air_k_mean,air_k_dev_pct,proc_k_mean,proc_k_dev_pct,temp_delta_k_mean,temp_delta_k_dev_pct,rpm_mean,rpm_dev_pct,torque_mean,torque_dev_pct,wear_mean,wear_dev_pct,power_w_mean,power_w_dev_pct,strain_mean,strain_dev_pct,dominant_driver
+Heat Dissipation,115,302.56,0.9,310.79,0.3,8.23,-17.9,1337.26,-13.2,53.17,34.2,107.19,0.5,7433.17,19.0,5702.38,35.3,strain
+Power,91,300.0,0.0,309.94,-0.0,9.94,-0.8,1783.3,15.8,47.7,20.4,100.73,-5.6,7161.91,14.7,4862.95,15.4,torque
+Overstrain,78,299.87,-0.0,310.05,0.0,10.18,1.6,1354.24,-12.1,56.88,43.5,208.22,95.2,8043.05,28.8,11794.24,179.9,strain
+Tool Wear,46,300.3,0.1,310.17,0.1,9.87,-1.5,1566.17,1.7,37.84,-4.5,216.37,102.8,6019.33,-3.6,8188.77,94.3,wear
+Random,18,300.77,0.3,310.76,0.2,9.99,-0.3,1489.44,-3.3,43.52,9.8,119.89,12.4,6677.86,6.9,5097.02,21.0,strain
+Failure (unclassified),9,300.33,0.1,310.2,0.1,9.87,-1.5,1507.67,-2.1,41.69,5.2,117.22,9.9,6453.39,3.3,4641.7,10.2,strain

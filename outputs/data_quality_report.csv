@@ -1,0 +1,22 @@
+rule_id,severity,rule_name,row_count,status
+SEN-01,BLOCK,Null sensor value on the critical path,0,PASS
+SEN-02,BLOCK,Non-positive sensor reading (physically impossible),0,PASS
+AI4-01,BLOCK,Process temperature below air temperature (sensor swap),0,PASS
+AI4-04,BLOCK,Non-positive torque or speed,0,PASS
+REF-02,BLOCK,Failure logged against an unknown machine,0,PASS
+REF-01,BLOCK,Telemetry for an unknown machine,0,PASS
+CMP-07,BLOCK,Machines with an incomplete hourly series,0,PASS
+CMP-08,BLOCK,Duplicate machine-hour readings,0,PASS
+SEN-04,WARN,Readings beyond 5 sigma from the fleet mean,58,FAIL
+AI4-03,WARN,Run flagged with a mode but no machine-failure flag,18,FAIL
+EVT-01,WARN,Failures with no component replacement within 6h,18,FAIL
+AI4-02,WARN,Failure flag set with no failure mode labelled,9,FAIL
+REF-03,WARN,Machines with zero failures in the window,2,FAIL
+SEN-03,WARN,Machine-days with zero sensor variance (stuck transmitter),0,PASS
+EVT-02,WARN,Failure timestamps outside the telemetry window,0,PASS
+CMP-01,INFO,Telemetry readings ingested,876100,INFO
+CMP-06,INFO,Process runs (AI4I feed),10000,INFO
+CMP-04,INFO,Error events,3919,INFO
+CMP-05,INFO,Maintenance events,3286,INFO
+CMP-03,INFO,Failure events,761,INFO
+CMP-02,INFO,Machines instrumented,100,INFO

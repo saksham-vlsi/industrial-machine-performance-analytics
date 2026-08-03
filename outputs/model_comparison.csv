@@ -1,0 +1,5 @@
+machine_model,machines,avg_age_years,failures,errors,avg_mtbf_days,avg_est_uptime_pct,avg_vibration,reactive_pct
+model1,16,12.3,189,672,32.9,98.97,40.44,34.9
+model2,17,12.8,168,702,40.8,99.03,40.39,29.9
+model3,35,12.0,221,1328,61.2,99.09,40.4,18.8
+model4,32,9.3,183,1217,82.3,99.13,40.34,17.5

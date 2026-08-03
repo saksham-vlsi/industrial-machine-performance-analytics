@@ -1,0 +1,6 @@
+error_code,occurrences,pct_of_errors,machines_affected,avg_per_affected_machine
+error1,1010,25.77,100,10.1
+error2,988,25.21,100,9.9
+error3,838,21.38,100,8.4
+error4,727,18.55,100,7.3
+error5,356,9.08,93,3.8

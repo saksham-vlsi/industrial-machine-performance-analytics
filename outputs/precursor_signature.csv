@@ -1,0 +1,6 @@
+failure_window,readings,avg_voltage,avg_rotation,avg_pressure,avg_vibration,voltage_pct_vs_baseline,rotation_pct_vs_baseline,pressure_pct_vs_baseline,vibration_pct_vs_baseline
+Baseline,825345,170.567,447.772,100.671,40.286,-0.0,0.0,-0.0,-0.0
+T-72h,32853,173.279,432.494,103.152,41.568,1.59,-3.41,2.46,3.18
+T-24h,8565,176.051,418.286,105.263,42.765,3.22,-6.58,4.56,6.15
+T-12h,4308,176.063,418.892,105.342,42.763,3.22,-6.45,4.64,6.15
+T-6h,5029,175.561,419.251,105.339,42.763,2.93,-6.37,4.64,6.15

@@ -1,0 +1,6 @@
+failure_window,readings,voltage_threshold,rotation_threshold,pressure_threshold,vibration_threshold,pct_voltage_exceed,pct_rotation_exceed,pct_pressure_exceed,pct_vibration_exceed,pct_any_exceed
+Baseline,825345,208.13,316.77,131.7,54.24,0.869,0.782,0.8,0.784,3.196
+T-72h,32853,208.13,316.77,131.7,54.24,2.545,3.698,3.482,3.656,12.952
+T-24h,8565,208.13,316.77,131.7,54.24,4.472,6.095,5.511,6.095,21.401
+T-12h,4308,208.13,316.77,131.7,54.24,3.877,5.966,6.082,6.128,21.147
+T-6h,5029,208.13,316.77,131.7,54.24,4.017,6.284,5.647,6.025,21.237

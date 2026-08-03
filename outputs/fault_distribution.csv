@@ -1,0 +1,5 @@
+component,failures,pct_of_failures,cumulative_pct,machines_affected,rank_by_frequency
+comp2,259,34.03,34.03,92,1
+comp1,192,25.23,59.26,86,2
+comp4,179,23.52,82.79,49,3
+comp3,131,17.21,100.0,33,4

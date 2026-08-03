@@ -1,0 +1,6 @@
+rule,threshold,alerts_raised,true_positives,false_positives,false_negatives,precision_pct,recall_pct,f1_pct
+volt,192.34,8756,1737,7019,16165,19.84,9.7,13.03
+rotate,361.69,8756,2037,6719,15865,23.26,11.38,15.28
+pressure,126.14,8756,1348,7408,16554,15.4,7.53,10.11
+vibration,50.74,8756,1534,7222,16368,17.52,8.57,11.51
+ANY parameter,,34389,6423,27966,11479,18.68,35.88,24.57
